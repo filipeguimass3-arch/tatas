@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffc931">
+<title>Tata’s Lanches | Oficial</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1b1410;--paper:#fff8ea;--mus:#ffc931;--red:#e63b2e;--wa:#25d366;--mut:#6b5c50}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Figtree',system-ui,sans-serif;font-size:15px;padding-bottom:96px}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation;border:0;background:none}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.display{font-family:'Archivo Black',sans-serif}
+
+.hero{background:var(--mus);border-bottom:2px solid var(--ink);padding:30px 18px 24px;text-align:center}
+.logo{display:inline-block;line-height:.9}
+.logo b{display:block;font-family:'Archivo Black';font-size:clamp(46px,14vw,72px);letter-spacing:-.03em;font-weight:400}
+.logo span{display:inline-block;margin-top:6px;background:var(--ink);color:var(--mus);font-family:'Archivo Black';font-size:clamp(20px,6vw,28px);padding:6px 16px;border-radius:8px;letter-spacing:.02em}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:6px 14px;font-weight:600;font-size:13px}
+.status i{width:9px;height:9px;border-radius:50%;background:#1f9d55}
+
+.tabs{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--ink)}
+.tabs div{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 16px;max-width:1100px;margin:0 auto}
+.tabs div::-webkit-scrollbar{display:none}
+.tabs a{flex:none;padding:8px 15px;border:2px solid var(--ink);border-radius:999px;background:#fff;font-weight:700;font-size:13px;color:var(--ink);text-decoration:none}
+.tabs a:active{background:var(--mus)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px;display:grid;gap:28px;grid-template-columns:1fr}
+.cat{scroll-margin-top:72px;margin-bottom:30px}
+.cat h2{display:inline-block;margin:0 0 16px;font-family:'Archivo Black';font-weight:400;font-size:26px;letter-spacing:-.01em;background:linear-gradient(transparent 58%,var(--mus) 58%)}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+
+.item{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:14px;background:#fff;border:2px solid var(--ink);border-radius:16px;box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.item:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.item .t{flex:1;min-width:0}
+.item h3{margin:0;font-family:'Archivo Black';font-weight:400;font-size:17px}
+.item p{margin:5px 0 0;font-size:14px;line-height:1.4;color:var(--mut)}
+.item .pr{display:block;margin-top:8px;font-family:'Archivo Black';font-size:18px;color:var(--red)}
+.plus{flex:none;width:46px;height:46px;display:grid;place-items:center;background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:12px;font-family:'Archivo Black';font-size:26px;line-height:1}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 18px;border:2px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);background:var(--red);color:#fff;font-family:'Archivo Black';font-size:15px;transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.wa{background:var(--wa);color:var(--ink)}
+.btn.split{justify-content:space-between}
+
+.in{width:100%;padding:13px 14px;background:#fff;border:2px solid var(--ink);border-radius:12px;font-size:16px;outline:none}
+.in::placeholder{color:#a39385}
+.in:focus{box-shadow:3px 3px 0 var(--mus)}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;min-height:48px;background:#fff;border:2px solid var(--ink);border-radius:12px;font-weight:700;font-size:14px}
+.seg button.on{background:var(--mus);box-shadow:3px 3px 0 var(--ink)}
+.lbl{display:block;margin:0 0 8px;font-weight:700;font-size:14px}
+.stack>*+*{margin-top:10px}
+.sec{margin-bottom:22px}
+
+.panel{position:fixed;left:0;right:0;bottom:0;z-index:40;max-height:92vh;overflow-y:auto;background:var(--paper);border-top:2px solid var(--ink);border-radius:24px 24px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom));transform:translateY(106%);transition:transform .3s ease}
+.panel.open{transform:none}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.ph h2{margin:0;font-family:'Archivo Black';font-weight:400;font-size:26px}
+.x{width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;background:#fff;font-size:16px;font-weight:700}
+.scrim{position:fixed;inset:0;z-index:30;background:rgba(27,20,16,.6);display:none}
+.scrim.show{display:block}
+
+.line{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:2px dashed #e4d6bb}
+.line b{font-weight:700}
+.line em{display:block;margin-top:3px;font-size:13px;color:var(--mut);font-style:normal}
+.line .r{display:flex;align-items:flex-start;gap:4px;flex:none;font-weight:700}
+.line .r button{width:34px;height:34px;color:var(--red);font-size:16px;font-weight:700}
+.empty{padding:26px 0;text-align:center;color:var(--mut)}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 16px}
+.tot b{font-family:'Archivo Black';font-weight:400;font-size:30px}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--ink);padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+.bar button{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--mus);color:var(--ink);border-radius:14px;font-family:'Archivo Black';font-size:15px}
+.bar .n{display:inline-grid;place-items:center;width:28px;height:28px;margin-right:10px;border-radius:50%;background:var(--ink);color:var(--mus);font-size:13px}
+
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(27,20,16,.65)}
+.modal.show{display:flex}
+.sheet{width:100%;max-width:520px;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:24px 24px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease}
+@keyframes up{from{transform:translateY(36px);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{margin:0;font-family:'Archivo Black';font-weight:400;font-size:24px}
+.sheet .d{margin:6px 0 16px;color:var(--mut);font-size:14px;line-height:1.4}
+
+.toast{position:fixed;left:50%;bottom:98px;transform:translate(-50%,16px);z-index:60;background:var(--ink);color:var(--mus);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){
+ body{padding-bottom:30px}
+ .wrap{grid-template-columns:minmax(0,1fr) 400px;align-items:start}
+ .panel{position:sticky;top:84px;transform:none;max-height:calc(100vh - 104px);border:2px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);background:#fff}
+ .bar,.scrim.c,.x.c{display:none!important}
+ .modal{align-items:center}.sheet{border-radius:24px;border-bottom:2px solid var(--ink)}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="logo"><b>TATA’S</b><span>LANCHES</span></div>
+  <div><span class="status"><i></i>Aberto agora</span></div>
+</header>
+
+<nav class="tabs"><div id="tabs"></div></nav>
+
+<div class="wrap">
+  <main id="menu"></main>
+
+  <aside id="panel" class="panel">
+    <div class="ph"><h2>Seu pedido</h2><button class="x c" onclick="toggleCart(false)" aria-label="Fechar">✕</button></div>
+
+    <div id="cart-list"></div>
+
+    <div class="tot"><span>Total</span><b id="total">R$ 0,00</b></div>
+
+    <div class="sec stack">
+      <span class="lbl">Seus dados</span>
+      <input class="in" id="c-nome" placeholder="Seu nome" autocomplete="name">
+      <div class="seg">
+        <button id="t-del" class="on" onclick="setTipo('Delivery')">🛵 Entrega</button>
+        <button id="t-ret" onclick="setTipo('Retirada')">🛍️ Retirada</button>
+      </div>
+      <div id="end-box" class="stack">
+        <input class="in" id="c-rua" placeholder="Rua e bairro" autocomplete="street-address">
+        <div style="display:flex;gap:10px">
+          <input class="in" id="c-num" placeholder="Nº" style="width:90px">
+          <input class="in" id="c-ref" placeholder="Ponto de referência" style="flex:1">
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <span class="lbl">Forma de pagamento</span>
+      <div class="seg" id="pay-seg">
+        <button onclick="setPay('Pix')">💠 Pix</button>
+        <button onclick="setPay('Cartão')">💳 Cartão</button>
+        <button onclick="setPay('Dinheiro')">💵 Dinheiro</button>
+      </div>
+      <div id="troco-box" class="stack" style="display:none;margin-top:10px">
+        <input class="in" id="c-troco" type="tel" inputmode="decimal" placeholder="Troco para quanto? (ex.: 50)">
+        <label style="display:flex;align-items:center;gap:8px;min-height:34px;font-size:14px"><input type="checkbox" id="c-semtroco" onchange="document.getElementById('c-troco').disabled=this.checked"> Não preciso de troco</label>
+      </div>
+    </div>
+
+    <button class="btn wa" onclick="enviar()">Finalizar no WhatsApp</button>
+  </aside>
+</div>
+
+<div id="scrim" class="scrim c" onclick="toggleCart(false)"></div>
+
+<div class="bar"><button onclick="toggleCart(true)"><span><span class="n" id="bar-n">0</span>Ver meu pedido</span><span id="bar-total">R$ 0,00</span></button></div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeItem()"><div class="sheet" id="sheet"></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+let cart=[], modo="Delivery", pay="", cur=null;
+
+const dados = {
+  "🏆 Os mais pedidos": [
+    {n:"X-Tatas Especial",p:23.00,d:"Hambúrguer 90g, Carne, Calabresa, Ovo, Presunto, Mussarela, Salada e Batata."},
+    {n:"X-Tudo",p:27.00,d:"O REI DA CASA: Frango, Bacon, Ovo, Calabresa, Salsicha e muito mais!"},
+    {n:"Moda da Casa",p:24.00,d:"Picanha, Bacon, Ovo, Presunto, Mussarela e Abacaxi."}
+  ],
+  "🍔 Burgers clássicos": [
+    {n:"X-Burguer",p:16.00,d:"Carne, Mussarela, Alface e Tomate."},
+    {n:"X-Bacon",p:18.00,d:"Bacon crocante, Carne e Mussarela."},
+    {n:"X-Salada",p:19.00,d:"Hambúrguer, Presunto, Mussarela e Salada."},
+    {n:"X-Black",p:21.00,d:"Carne, Ovo, Bacon e Mussarela."},
+    {n:"Gostosão",p:23.00,d:"Carne, Bacon, Ovo, Presunto e Salsicha."}
+  ],
+  "🥤 Bebidas": [
+    {n:"Coca-Cola 2L",p:15.00,d:"Bem gelada"},
+    {n:"Coca-Cola 1L",p:10.00,d:"Garrafa"},
+    {n:"Coca-Cola Lata",p:6.00,d:"350ml"}
+  ]
+};
+
+const ITEMS=[];
+const brl=v=>'R$ '+v.toFixed(2).replace('.',',');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function render(){
+  const menu=document.getElementById('menu'), tabs=document.getElementById('tabs');
+  let ci=0, out='';
+  for(const cat in dados){
+    const bev=cat.includes('Bebidas');
+    tabs.innerHTML+=`<a href="#cat-${ci}">${cat}</a>`;
+    out+=`<section class="cat" id="cat-${ci}"><h2>${cat}</h2><div class="grid">`;
+    dados[cat].forEach(i=>{
+      const id=ITEMS.push({...i,bev})-1;
+      out+=`<button class="item" onclick="openItem(${id})"><span class="t"><h3>${i.n}</h3><p>${i.d}</p><span class="pr">${brl(i.p)}</span></span><span class="plus" aria-hidden="true">+</span></button>`;
+    });
+    out+=`</div></section>`; ci++;
+  }
+  menu.innerHTML=out;
+}
+
+function openItem(id){
+  const it=ITEMS[id];
+  if(it.bev){cart.push({n:it.n,p:it.p,obs:''});update();toast('Adicionado ✓');return}
+  cur=id;
+  document.getElementById('sheet').innerHTML=`
+    <h3>${it.n}</h3><p class="d">${it.d}</p>
+    <label class="lbl" for="obs">Alguma observação?</label>
+    <textarea id="obs" class="in" rows="3" maxlength="160" placeholder="Ex.: sem cebola, com bacon extra, carne bem passada..." style="resize:none;margin-bottom:16px"></textarea>
+    <button class="btn split" onclick="confirmItem()"><span>Adicionar ao pedido</span><span>${brl(it.p)}</span></button>`;
+  document.getElementById('modal').classList.add('show');
+}
+function closeItem(){document.getElementById('modal').classList.remove('show');cur=null}
+function confirmItem(){
+  const it=ITEMS[cur];
+  cart.push({n:it.n,p:it.p,obs:document.getElementById('obs').value.trim()});
+  closeItem();update();toast('Adicionado ✓');
+}
+function remove(i){cart.splice(i,1);update()}
+
+function update(){
+  const list=document.getElementById('cart-list');let total=0;
+  list.innerHTML=cart.length?'':'<p class="empty">Seu carrinho está vazio.<br>Escolha um lanche no cardápio.</p>';
+  cart.forEach((it,i)=>{
+    total+=it.p;
+    list.innerHTML+=`<div class="line"><div><b>${it.n}</b>${it.obs?`<em>Obs: ${esc(it.obs)}</em>`:''}</div><div class="r"><span>${brl(it.p)}</span><button onclick="remove(${i})" aria-label="Remover ${it.n}">✕</button></div></div>`;
+  });
+  document.getElementById('total').innerText=brl(total);
+  document.getElementById('bar-total').innerText=brl(total);
+  document.getElementById('bar-n').innerText=cart.length;
+}
+
+function setTipo(t){
+  modo=t;const d=t==='Delivery';
+  document.getElementById('t-del').className=d?'on':'';
+  document.getElementById('t-ret').className=d?'':'on';
+  document.getElementById('end-box').style.display=d?'block':'none';
+}
+function setPay(p){
+  pay=p;
+  document.querySelectorAll('#pay-seg button').forEach(b=>b.classList.toggle('on',b.innerText.includes(p)));
+  document.getElementById('troco-box').style.display=p==='Dinheiro'?'block':'none';
+}
+function toggleCart(o){
+  document.getElementById('panel').classList.toggle('open',o);
+  document.getElementById('scrim').classList.toggle('show',o);
+}
+function toast(t){
+  const el=document.getElementById('toast');el.innerText=t;el.classList.add('show');
+  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1400);
+}
+
+function enviar(){
+  const nome=document.getElementById('c-nome').value;
+  if(!nome)return alert("Ei, qual seu nome?");
+  if(cart.length===0)return alert("O carrinho está vazio!");
+  if(!pay)return alert("Escolha a forma de pagamento!");
+
+  let total=0;
+  let msg=`🔥 *NOVO PEDIDO: TATA'S LANCHES* 🔥\n\n`;
+  msg+=`👤 *Cliente:* ${nome}\n`;
+  msg+=`📍 *Tipo:* ${modo}\n\n`;
+  msg+=`📝 *ITENS:* \n`;
+  cart.forEach(i=>{
+    msg+=`• ${i.n} (R$ ${i.p.toFixed(2)})\n`;
+    if(i.obs)msg+=`   ↳ Obs: ${i.obs}\n`;
+    total+=i.p;
+  });
+
+  if(modo==='Delivery'){
+    const rua=document.getElementById('c-rua').value;
+    const num=document.getElementById('c-num').value;
+    if(!rua)return alert("Onde entregamos?");
+    msg+=`\n📍 *ENTREGA:* ${rua}, Nº ${num}`;
+  }
+
+  msg+=`\n\n💳 *PAGAMENTO:* ${pay}`;
+  if(pay==='Dinheiro'){
+    const sem=document.getElementById('c-semtroco').checked;
+    const tr=document.getElementById('c-troco').value.trim();
+    msg+=sem||!tr?` (sem troco)`:` (troco para R$ ${tr})`;
+  }
+
+  msg+=`\n\n💰 *TOTAL: R$ ${total.toFixed(2)}*`;
+  window.open(`https://wa.me/5538998122614?text=${encodeURIComponent(msg)}`);
+}
+
+render();update();
+</script>
+</body>
+</html>
