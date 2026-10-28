@@ -103,7 +103,7 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 
 <header class="hero">
   <div class="logo"><b>TATA’S</b><span>LANCHES</span></div>
-  <div><span class="status"><i></i>Aberto agora</span></div>
+  
 </header>
 
 <nav class="tabs"><div id="tabs"></div></nav>
@@ -163,21 +163,43 @@ let cart=[], modo="Delivery", pay="", cur=null;
 
 const dados = {
   "🏆 Os mais pedidos": [
-    {n:"X-Tatas Especial",p:23.00,d:"Hambúrguer 90g, Carne, Calabresa, Ovo, Presunto, Mussarela, Salada e Batata."},
-    {n:"X-Tudo",p:27.00,d:"O REI DA CASA: Frango, Bacon, Ovo, Calabresa, Salsicha e muito mais!"},
-    {n:"Moda da Casa",p:24.00,d:"Picanha, Bacon, Ovo, Presunto, Mussarela e Abacaxi."}
+    {n:"X-Tudo",p:27.00,d:"Pão 90gr, hambúrguer de carne, frango desfiado, bacon, ovo, calabresa, presunto, mussarela, salsicha, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Bem Bolado",p:23.00,d:"Pão 90gr, hambúrguer de carne, frango desfiado, bacon, ovo, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Bacon",p:18.00,d:"Pão 90gr, hambúrguer de carne, bacon, mussarela, alface, tomate, maionese, molho especial, batata, milho."}
   ],
-  "🍔 Burgers clássicos": [
-    {n:"X-Burguer",p:16.00,d:"Carne, Mussarela, Alface e Tomate."},
-    {n:"X-Bacon",p:18.00,d:"Bacon crocante, Carne e Mussarela."},
-    {n:"X-Salada",p:19.00,d:"Hambúrguer, Presunto, Mussarela e Salada."},
-    {n:"X-Black",p:21.00,d:"Carne, Ovo, Bacon e Mussarela."},
-    {n:"Gostosão",p:23.00,d:"Carne, Bacon, Ovo, Presunto e Salsicha."}
+  "🍔 Cardápio Completo": [
+    {n:"Misto Quente",p:12.00,d:"Pão de forma, mussarela, presunto."},
+    {n:"Misto Especial",p:14.00,d:"Pão, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Hamburguer",p:14.00,d:"Pão 90gr, hambúrguer de carne, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Hamburguer Especial",p:20.00,d:"Pão 90gr, hambúrguer de carne, frango, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Burguer",p:16.00,d:"Pão 90gr, hambúrguer de carne, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Egg Burguer",p:18.00,d:"Pão 90gr, hambúrguer de carne, ovo, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Egg Bacon",p:20.00,d:"Pão 90gr, hambúrguer de carne, ovo, bacon, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Salada",p:19.00,d:"Pão 90gr, hambúrguer de carne, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Baurú",p:18.00,d:"Pão 90gr, hambúrguer de carne, ovo, presunto, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Black",p:21.00,d:"Pão 90gr, hambúrguer de carne, ovo, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-10 Especial",p:22.00,d:"Pão 90gr, hambúrguer de carne, bacon, ovo, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Gostosão",p:23.00,d:"Pão 90gr, hambúrguer de carne, bacon, ovo, presunto, mussarela, salsicha, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Calafrango",p:19.00,d:"Pão 90gr, frango desfiado, calabresa, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Frango",p:17.00,d:"Pão 90gr, frango desfiado, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Kikoko",p:19.00,d:"Pão 90gr, frango desfiado, bacon, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Beliscão Simples",p:16.00,d:"Pão 90gr, ovo, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Beliscão Especial",p:19.00,d:"Pão 90gr, frango desfiado, ovo, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Egg Frango",p:22.00,d:"Pão 90gr, hambúrguer de carne, frango desfiado, ovo, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Pikiniki",p:18.00,d:"Pão 90gr, bacon, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Americano",p:17.00,d:"Pão 90gr, ovo, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Tatas Especial",p:23.00,d:"Pão 90gr, hambúrguer de carne, calabresa, ovo, presunto, mussarela, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"California",p:21.00,d:"Pão 90gr, hambúrguer de carne, bacon, presunto, mussarela, salsicha, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"Moda da Casa",p:24.00,d:"Pão 90gr, hambúrguer de picanha, bacon, ovo, presunto, mussarela, abacaxi, alface, tomate, maionese, molho especial, batata, milho."},
+    {n:"X-Bruce",p:35.00,d:"2 carnes, 3 ovos, bacon, frango, mussarela, alface, tomate, maionese, molho especial, batata e milho."}
   ],
   "🥤 Bebidas": [
-    {n:"Coca-Cola 2L",p:15.00,d:"Bem gelada"},
     {n:"Coca-Cola 1L",p:10.00,d:"Garrafa"},
-    {n:"Coca-Cola Lata",p:6.00,d:"350ml"}
+    {n:"Mate Couro 1L",p:9.00,d:"Garrafa"},
+    {n:"Mate Couro 600 ml",p:8.00,d:"Garrafa"},
+    {n:"Coca-Cola Lata",p:6.00,d:"350ml"},
+    {n:"Coca-Cola 2L",p:15.00,d:"Bem gelada"},
+    {n:"Mate Couro 2L",p:12.00,d:"Garrafa"}
   ]
 };
 
@@ -265,7 +287,7 @@ function enviar(){
   msg+=`📝 *ITENS:* \n`;
   cart.forEach(i=>{
     msg+=`• ${i.n} (R$ ${i.p.toFixed(2)})\n`;
-    if(i.obs)msg+=`   ↳ Obs: ${i.obs}\n`;
+    if(i.obs)msg+=`    ↳ Obs: ${i.obs}\n`;
     total+=i.p;
   });
 
