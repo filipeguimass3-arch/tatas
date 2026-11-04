@@ -20,8 +20,6 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 .logo{display:inline-block;line-height:.9}
 .logo b{display:block;font-family:'Archivo Black';font-size:clamp(46px,14vw,72px);letter-spacing:-.03em;font-weight:400}
 .logo span{display:inline-block;margin-top:6px;background:var(--ink);color:var(--mus);font-family:'Archivo Black';font-size:clamp(20px,6vw,28px);padding:6px 16px;border-radius:8px;letter-spacing:.02em}
-.status{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:6px 14px;font-weight:600;font-size:13px}
-.status i{width:9px;height:9px;border-radius:50%;background:#1f9d55}
 
 .tabs{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--ink)}
 .tabs div{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 16px;max-width:1100px;margin:0 auto}
@@ -41,6 +39,14 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 .item p{margin:5px 0 0;font-size:14px;line-height:1.4;color:var(--mut)}
 .item .pr{display:block;margin-top:8px;font-family:'Archivo Black';font-size:18px;color:var(--red)}
 .plus{flex:none;width:46px;height:46px;display:grid;place-items:center;background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:12px;font-family:'Archivo Black';font-size:26px;line-height:1}
+
+/* Grid de Adicionais */
+.addons-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.addon-card{display:flex;align-items:center;justify-content:space-between;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:10px 12px;cursor:pointer;user-select:none;box-shadow:2px 2px 0 var(--ink)}
+.addon-card input{accent-color:var(--red);width:18px;height:18px}
+.addon-info{display:flex;flex-direction:column;font-size:13px}
+.addon-info b{font-family:'Archivo Black';font-size:14px}
+.addon-info span{color:var(--red);font-weight:700}
 
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 18px;border:2px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);background:var(--red);color:#fff;font-family:'Archivo Black';font-size:15px;transition:transform .1s,box-shadow .1s}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
@@ -88,13 +94,13 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 .toast{position:fixed;left:50%;bottom:98px;transform:translate(-50%,16px);z-index:60;background:var(--ink);color:var(--mus);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.25s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}.addons-grid{grid-template-columns:repeat(4,1fr)}}
 @media(min-width:1000px){
- body{padding-bottom:30px}
- .wrap{grid-template-columns:minmax(0,1fr) 400px;align-items:start}
- .panel{position:sticky;top:84px;transform:none;max-height:calc(100vh - 104px);border:2px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);background:#fff}
- .bar,.scrim.c,.x.c{display:none!important}
- .modal{align-items:center}.sheet{border-radius:24px;border-bottom:2px solid var(--ink)}
+  body{padding-bottom:30px}
+  .wrap{grid-template-columns:minmax(0,1fr) 400px;align-items:start}
+  .panel{position:sticky;top:84px;transform:none;max-height:calc(100vh - 104px);border:2px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);background:#fff}
+  .bar,.scrim.c,.x.c{display:none!important}
+  .modal{align-items:center}.sheet{border-radius:24px;border-bottom:2px solid var(--ink)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
 </style>
@@ -103,7 +109,6 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 
 <header class="hero">
   <div class="logo"><b>TATA’S</b><span>LANCHES</span></div>
-  
 </header>
 
 <nav class="tabs"><div id="tabs"></div></nav>
@@ -203,6 +208,17 @@ const dados = {
   ]
 };
 
+const LISTA_ADICIONAIS = [
+  {n:"Molho especial", p:1.00},
+  {n:"Carne", p:4.00},
+  {n:"Carne de picanha", p:6.00},
+  {n:"Ovo", p:3.00},
+  {n:"Mussarela", p:4.00},
+  {n:"Presunto", p:4.00},
+  {n:"Bacon", p:4.00},
+  {n:"Salsicha", p:4.00}
+];
+
 const ITEMS=[];
 const brl=v=>'R$ '+v.toFixed(2).replace('.',',');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -225,21 +241,67 @@ function render(){
 
 function openItem(id){
   const it=ITEMS[id];
-  if(it.bev){cart.push({n:it.n,p:it.p,obs:''});update();toast('Adicionado ✓');return}
   cur=id;
+  
+  let htmlAdicionais = '';
+  if(!it.bev){
+    htmlAdicionais += `<label class="lbl" style="margin-top:14px">Deseja adicionar algo?</label><div class="addons-grid">`;
+    LISTA_ADICIONAIS.forEach((add, idx)=>{
+      htmlAdicionais += `
+        <label class="addon-card">
+          <div class="addon-info">
+            <b>${add.n}</b>
+            <span>+ ${brl(add.p)}</span>
+          </div>
+          <input type="checkbox" class="addon-chk" value="${add.n}" data-price="${add.p}" onchange="calcModalTotal(${it.p})">
+        </label>`;
+    });
+    htmlAdicionais += `</div>`;
+  }
+
   document.getElementById('sheet').innerHTML=`
     <h3>${it.n}</h3><p class="d">${it.d}</p>
     <label class="lbl" for="obs">Alguma observação?</label>
-    <textarea id="obs" class="in" rows="3" maxlength="160" placeholder="Ex.: sem cebola, com bacon extra, carne bem passada..." style="resize:none;margin-bottom:16px"></textarea>
-    <button class="btn split" onclick="confirmItem()"><span>Adicionar ao pedido</span><span>${brl(it.p)}</span></button>`;
+    <textarea id="obs" class="in" rows="2" maxlength="160" placeholder="Ex.: sem cebola, ponto da carne..." style="resize:none;margin-bottom:10px"></textarea>
+    ${htmlAdicionais}
+    <div style="margin-top:16px">
+      <button id="btn-add-modal" class="btn split" onclick="confirmItem(${it.p})"><span>Adicionar ao pedido</span><span id="modal-total">${brl(it.p)}</span></button>
+    </div>`;
   document.getElementById('modal').classList.add('show');
 }
+
+function calcModalTotal(basePrice){
+  let total = basePrice;
+  document.querySelectorAll('.addon-chk:checked').forEach(chk=>{
+    total += parseFloat(chk.dataset.price);
+  });
+  document.getElementById('modal-total').innerText = brl(total);
+}
+
 function closeItem(){document.getElementById('modal').classList.remove('show');cur=null}
-function confirmItem(){
+
+function confirmItem(basePrice){
   const it=ITEMS[cur];
-  cart.push({n:it.n,p:it.p,obs:document.getElementById('obs').value.trim()});
+  let finalPrice = basePrice;
+  let adicionaisStr = [];
+
+  if(!it.bev){
+    document.querySelectorAll('.addon-chk:checked').forEach(chk=>{
+      finalPrice += parseFloat(chk.dataset.price);
+      adicionaisStr.push(chk.value);
+    });
+  }
+
+  cart.push({
+    n: it.n,
+    p: finalPrice,
+    obs: document.getElementById('obs').value.trim(),
+    addons: adicionaisStr
+  });
+
   closeItem();update();toast('Adicionado ✓');
 }
+
 function remove(i){cart.splice(i,1);update()}
 
 function update(){
@@ -247,7 +309,9 @@ function update(){
   list.innerHTML=cart.length?'':'<p class="empty">Seu carrinho está vazio.<br>Escolha um lanche no cardápio.</p>';
   cart.forEach((it,i)=>{
     total+=it.p;
-    list.innerHTML+=`<div class="line"><div><b>${it.n}</b>${it.obs?`<em>Obs: ${esc(it.obs)}</em>`:''}</div><div class="r"><span>${brl(it.p)}</span><button onclick="remove(${i})" aria-label="Remover ${it.n}">✕</button></div></div>`;
+    let descAdicionais = it.addons && it.addons.length ? `<em>Adicionais: ${esc(it.addons.join(', '))}</em>` : '';
+    let descObs = it.obs ? `<em>Obs: ${esc(it.obs)}</em>` : '';
+    list.innerHTML+=`<div class="line"><div><b>${it.n}</b>${descAdicionais}${descObs}</div><div class="r"><span>${brl(it.p)}</span><button onclick="remove(${i})" aria-label="Remover ${it.n}">✕</button></div></div>`;
   });
   document.getElementById('total').innerText=brl(total);
   document.getElementById('bar-total').innerText=brl(total);
@@ -287,6 +351,7 @@ function enviar(){
   msg+=`📝 *ITENS:* \n`;
   cart.forEach(i=>{
     msg+=`• ${i.n} (R$ ${i.p.toFixed(2)})\n`;
+    if(i.addons && i.addons.length) msg+=`    + Adicionais: ${i.addons.join(', ')}\n`;
     if(i.obs)msg+=`    ↳ Obs: ${i.obs}\n`;
     total+=i.p;
   });
