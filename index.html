@@ -40,13 +40,23 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 .item .pr{display:block;margin-top:8px;font-family:'Archivo Black';font-size:18px;color:var(--red)}
 .plus{flex:none;width:46px;height:46px;display:grid;place-items:center;background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:12px;font-family:'Archivo Black';font-size:26px;line-height:1}
 
-/* Grid de Adicionais */
-.addons-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.addon-card{display:flex;align-items:center;justify-content:space-between;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:10px 12px;cursor:pointer;user-select:none;box-shadow:2px 2px 0 var(--ink)}
-.addon-card input{accent-color:var(--red);width:18px;height:18px}
+/* Lista de Adicionais com Quantidade */
+.addons-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.addon-row{display:flex;align-items:center;justify-content:space-between;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:8px 12px;box-shadow:2px 2px 0 var(--ink)}
 .addon-info{display:flex;flex-direction:column;font-size:13px}
 .addon-info b{font-family:'Archivo Black';font-size:14px}
 .addon-info span{color:var(--red);font-weight:700}
+.addon-qty-controls{display:flex;align-items:center;gap:8px}
+.addon-qty-btn{width:30px;height:30px;background:var(--mus);color:var(--ink);border:2px solid var(--ink);border-radius:6px;font-family:'Archivo Black';font-size:16px;display:grid;place-items:center}
+.addon-qty-btn:active{transform:scale(0.95)}
+.addon-qty-val{font-family:'Archivo Black';font-size:15px;min-width:20px;text-align:center}
+
+/* Controle de Quantidade do Lanche no Modal */
+.qty-container{display:flex;align-items:center;justify-content:space-between;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:8px 12px;margin:12px 0;box-shadow:2px 2px 0 var(--ink)}
+.qty-controls{display:flex;align-items:center;gap:12px}
+.qty-btn{width:36px;height:36px;background:var(--mus);color:var(--ink);border:2px solid var(--ink);border-radius:8px;font-family:'Archivo Black';font-size:18px;display:grid;place-items:center}
+.qty-btn:active{transform:scale(0.95)}
+#modal-qty{font-family:'Archivo Black';font-size:18px;min-width:24px;text-align:center}
 
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 18px;border:2px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);background:var(--red);color:#fff;font-family:'Archivo Black';font-size:15px;transition:transform .1s,box-shadow .1s}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
@@ -86,7 +96,7 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 
 .modal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(27,20,16,.65)}
 .modal.show{display:flex}
-.sheet{width:100%;max-width:520px;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:24px 24px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease}
+.sheet{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:24px 24px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease}
 @keyframes up{from{transform:translateY(36px);opacity:0}to{transform:none;opacity:1}}
 .sheet h3{margin:0;font-family:'Archivo Black';font-weight:400;font-size:24px}
 .sheet .d{margin:6px 0 16px;color:var(--mut);font-size:14px;line-height:1.4}
@@ -94,7 +104,7 @@ button{cursor:pointer;touch-action:manipulation;border:0;background:none}
 .toast{position:fixed;left:50%;bottom:98px;transform:translate(-50%,16px);z-index:60;background:var(--ink);color:var(--mus);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.25s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}.addons-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1000px){
   body{padding-bottom:30px}
   .wrap{grid-template-columns:minmax(0,1fr) 400px;align-items:start}
@@ -212,6 +222,8 @@ const LISTA_ADICIONAIS = [
   {n:"Molho especial", p:1.00},
   {n:"Carne", p:4.00},
   {n:"Carne de picanha", p:6.00},
+  {n:"Frango", p:4.00},
+  {n:"Calabresa", p:4.00},
   {n:"Ovo", p:3.00},
   {n:"Mussarela", p:4.00},
   {n:"Presunto", p:4.00},
@@ -245,22 +257,34 @@ function openItem(id){
   
   let htmlAdicionais = '';
   if(!it.bev){
-    htmlAdicionais += `<label class="lbl" style="margin-top:14px">Deseja adicionar algo?</label><div class="addons-grid">`;
+    htmlAdicionais += `<label class="lbl" style="margin-top:14px">Deseja adicionar algo?</label><div class="addons-list">`;
     LISTA_ADICIONAIS.forEach((add, idx)=>{
       htmlAdicionais += `
-        <label class="addon-card">
+        <div class="addon-row">
           <div class="addon-info">
             <b>${add.n}</b>
             <span>+ ${brl(add.p)}</span>
           </div>
-          <input type="checkbox" class="addon-chk" value="${add.n}" data-price="${add.p}" onchange="calcModalTotal(${it.p})">
-        </label>`;
+          <div class="addon-qty-controls">
+            <button type="button" class="addon-qty-btn" onclick="alterarAddonQtd(${idx}, -1, ${it.p})">-</button>
+            <span id="addon-qty-${idx}" class="addon-qty-val" data-price="${add.p}" data-name="${add.n}">0</span>
+            <button type="button" class="addon-qty-btn" onclick="alterarAddonQtd(${idx}, 1, ${it.p})">+</button>
+          </div>
+        </div>`;
     });
     htmlAdicionais += `</div>`;
   }
 
   document.getElementById('sheet').innerHTML=`
     <h3>${it.n}</h3><p class="d">${it.d}</p>
+    <div class="qty-container">
+      <span style="font-weight:700">Quantidade do Lanche:</span>
+      <div class="qty-controls">
+        <button type="button" class="qty-btn" onclick="alterarQtd(-1, ${it.p})">-</button>
+        <span id="modal-qty">1</span>
+        <button type="button" class="qty-btn" onclick="alterarQtd(1, ${it.p})">+</button>
+      </div>
+    </div>
     <label class="lbl" for="obs">Alguma observação?</label>
     <textarea id="obs" class="in" rows="2" maxlength="160" placeholder="Ex.: sem cebola, ponto da carne..." style="resize:none;margin-bottom:10px"></textarea>
     ${htmlAdicionais}
@@ -270,11 +294,33 @@ function openItem(id){
   document.getElementById('modal').classList.add('show');
 }
 
+function alterarQtd(change, basePrice){
+  const qtyEl = document.getElementById('modal-qty');
+  let currentQty = parseInt(qtyEl.innerText) + change;
+  if(currentQty < 1) currentQty = 1;
+  qtyEl.innerText = currentQty;
+  calcModalTotal(basePrice);
+}
+
+function alterarAddonQtd(idx, change, basePrice){
+  const qtyEl = document.getElementById(`addon-qty-${idx}`);
+  let currentQty = parseInt(qtyEl.innerText) + change;
+  if(currentQty < 0) currentQty = 0;
+  qtyEl.innerText = currentQty;
+  calcModalTotal(basePrice);
+}
+
 function calcModalTotal(basePrice){
-  let total = basePrice;
-  document.querySelectorAll('.addon-chk:checked').forEach(chk=>{
-    total += parseFloat(chk.dataset.price);
+  let qty = parseInt(document.getElementById('modal-qty').innerText) || 1;
+  let extrasTotalPerItem = 0;
+  
+  document.querySelectorAll('.addon-qty-val').forEach(el=>{
+    let q = parseInt(el.innerText) || 0;
+    let p = parseFloat(el.dataset.price) || 0;
+    extrasTotalPerItem += (q * p);
   });
+
+  let total = (basePrice + extrasTotalPerItem) * qty;
   document.getElementById('modal-total').innerText = brl(total);
 }
 
@@ -282,19 +328,28 @@ function closeItem(){document.getElementById('modal').classList.remove('show');c
 
 function confirmItem(basePrice){
   const it=ITEMS[cur];
-  let finalPrice = basePrice;
+  let qty = parseInt(document.getElementById('modal-qty').innerText) || 1;
+  let extrasPerItem = 0;
   let adicionaisStr = [];
 
   if(!it.bev){
-    document.querySelectorAll('.addon-chk:checked').forEach(chk=>{
-      finalPrice += parseFloat(chk.dataset.price);
-      adicionaisStr.push(chk.value);
+    document.querySelectorAll('.addon-qty-val').forEach(el=>{
+      let q = parseInt(el.innerText) || 0;
+      if(q > 0){
+        let p = parseFloat(el.dataset.price) || 0;
+        let name = el.dataset.name;
+        extrasPerItem += (q * p);
+        adicionaisStr.push(`${q}x ${name}`);
+      }
     });
   }
 
+  let finalPricePerUnit = basePrice + extrasPerItem;
+
   cart.push({
     n: it.n,
-    p: finalPrice,
+    p: finalPricePerUnit * qty,
+    qtd: qty,
     obs: document.getElementById('obs').value.trim(),
     addons: adicionaisStr
   });
@@ -309,13 +364,14 @@ function update(){
   list.innerHTML=cart.length?'':'<p class="empty">Seu carrinho está vazio.<br>Escolha um lanche no cardápio.</p>';
   cart.forEach((it,i)=>{
     total+=it.p;
+    let qtdStr = it.qtd > 1 ? `<b>(${it.qtd}x)</b> ` : '';
     let descAdicionais = it.addons && it.addons.length ? `<em>Adicionais: ${esc(it.addons.join(', '))}</em>` : '';
     let descObs = it.obs ? `<em>Obs: ${esc(it.obs)}</em>` : '';
-    list.innerHTML+=`<div class="line"><div><b>${it.n}</b>${descAdicionais}${descObs}</div><div class="r"><span>${brl(it.p)}</span><button onclick="remove(${i})" aria-label="Remover ${it.n}">✕</button></div></div>`;
+    list.innerHTML+=`<div class="line"><div>${qtdStr}<b>${it.n}</b>${descAdicionais}${descObs}</div><div class="r"><span>${brl(it.p)}</span><button onclick="remove(${i})" aria-label="Remover ${it.n}">✕</button></div></div>`;
   });
   document.getElementById('total').innerText=brl(total);
   document.getElementById('bar-total').innerText=brl(total);
-  document.getElementById('bar-n').innerText=cart.length;
+  document.getElementById('bar-n').innerText=cart.reduce((sum, item) => sum + item.qtd, 0);
 }
 
 function setTipo(t){
@@ -350,7 +406,8 @@ function enviar(){
   msg+=`📍 *Tipo:* ${modo}\n\n`;
   msg+=`📝 *ITENS:* \n`;
   cart.forEach(i=>{
-    msg+=`• ${i.n} (R$ ${i.p.toFixed(2)})\n`;
+    let qTxt = i.qtd > 1 ? `${i.qtd}x ` : '';
+    msg+=`• ${qTxt}${i.n} (R$ ${i.p.toFixed(2)})\n`;
     if(i.addons && i.addons.length) msg+=`    + Adicionais: ${i.addons.join(', ')}\n`;
     if(i.obs)msg+=`    ↳ Obs: ${i.obs}\n`;
     total+=i.p;
